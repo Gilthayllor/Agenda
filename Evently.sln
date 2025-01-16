@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4FDC2D61-D5A2-4A05-A99F-0DFC222072FC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API", "API", "{25128BB8-CBA5-40CE-8488-E4C8B822DC22}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{15CFC471-2ED9-4CE6-9EB5-C74A95D60362}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Events", "Events", "{C6D4CBB2-F19C-4830-A15E-A73477D4401D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F47CC8D8-DFAE-4D83-8AF5-CA81CC942FFA}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.build.props = Directory.build.props
+		compose.yaml = compose.yaml
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Evently.Api", "src\API\Evently.Api\Evently.Api.csproj", "{1A57BD97-CDA6-44CB-8947-3951BA2915FF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1A57BD97-CDA6-44CB-8947-3951BA2915FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A57BD97-CDA6-44CB-8947-3951BA2915FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A57BD97-CDA6-44CB-8947-3951BA2915FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A57BD97-CDA6-44CB-8947-3951BA2915FF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{25128BB8-CBA5-40CE-8488-E4C8B822DC22} = {4FDC2D61-D5A2-4A05-A99F-0DFC222072FC}
+		{15CFC471-2ED9-4CE6-9EB5-C74A95D60362} = {4FDC2D61-D5A2-4A05-A99F-0DFC222072FC}
+		{C6D4CBB2-F19C-4830-A15E-A73477D4401D} = {15CFC471-2ED9-4CE6-9EB5-C74A95D60362}
+		{1A57BD97-CDA6-44CB-8947-3951BA2915FF} = {25128BB8-CBA5-40CE-8488-E4C8B822DC22}
+	EndGlobalSection
+EndGlobal
