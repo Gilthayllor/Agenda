@@ -1,4 +1,4 @@
-﻿namespace Evently.Modules.Events.Api.Events;
+﻿namespace Evently.Modules.Events.Domain.Events;
 
 #pragma warning disable CA1716
 public sealed class Event

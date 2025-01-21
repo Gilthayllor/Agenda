@@ -1,12 +1,6 @@
-﻿using Evently.Modules.Events.Api.Database;
-using Evently.Modules.Events.Api.Events;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Migrations;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Evently.Modules.Events.Infrastructure.Database;
 
-namespace Evently.Modules.Events.Api;
+namespace Evently.Modules.Events.Infrastructure;
 
 public static class EventsModule
 {

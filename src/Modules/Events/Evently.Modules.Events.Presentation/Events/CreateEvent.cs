@@ -1,9 +1,8 @@
-﻿using Evently.Modules.Events.Api.Database;
-using Microsoft.AspNetCore.Builder;
+﻿using Evently.Modules.Events.Domain.Events;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
-namespace Evently.Modules.Events.Api.Events;
+namespace Evently.Modules.Events.Presentation.Events;
 
 public static class CreateEvent
 {
