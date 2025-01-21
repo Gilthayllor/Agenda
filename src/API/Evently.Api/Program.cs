@@ -1,3 +1,4 @@
+using Evently.Api.Extensions;
 using Evently.Modules.Events.Api;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,8 @@ WebApplication app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    
+    app.ApplyMigrations();
 }
 
 app.MapGet("/", () => "Hello World!");
