@@ -1,37 +1,35 @@
-﻿namespace Evently.Modules.Events.Application.Events;
+﻿using Evently.Modules.Events.Application.Abstractions.Data;
+using Evently.Modules.Events.Domain.Events;
+using MediatR;
 
-public static class CreateEvent
+namespace Evently.Modules.Events.Application.Events;
+
+public sealed record CreateEventCommand(
+    string Title,
+    string Description,
+    string Location,
+    DateTime StartAtUtc,
+    DateTime? EndsAtUtc) : IRequest<Guid>;
+
+internal sealed class CreateEventCommandHandler(IEventRepository eventRepository, IUnitOfWork unitOfWork) : IRequestHandler<CreateEventCommand, Guid>
 {
-    public static void MapEndpoint(IEndpointRouteBuilder app)
+    public async Task<Guid> Handle(CreateEventCommand request, CancellationToken cancellationToken)
     {
-        app.MapPost("events", async (Request request, EventsDbContext context) =>
+        var @event = new Event
         {
-            var @event = new Event
-            {
-                Id = Guid.NewGuid(),
-                Title = request.Title,
-                Description = request.Description,
-                Location = request.Location,
-                StartAtUtc = request.StartAtUtc,
-                EndsAtUtc = request.EndsAtUtc,
-                Status = EventStatus.Draft
-            };
+            Id = Guid.NewGuid(),
+            Title = request.Title,
+            Description = request.Description,
+            Location = request.Location,
+            StartAtUtc = request.StartAtUtc,
+            EndsAtUtc = request.EndsAtUtc,
+            Status = EventStatus.Draft,
+        };
+        
+        eventRepository.Insert(@event);
 
-            context.Events.Add(@event);
-            
-            await context.SaveChangesAsync();
-
-            return Results.Ok(@event.Id);
-        })
-        .WithTags(Tags.Events);
-    }
-
-    internal sealed class Request
-    {
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public string Location { get; set; }
-        public DateTime StartAtUtc { get; set; }
-        public DateTime? EndsAtUtc { get; set; }
+        await unitOfWork.SaveChangesAsync(cancellationToken);
+        
+        return @event.Id;
     }
 }
