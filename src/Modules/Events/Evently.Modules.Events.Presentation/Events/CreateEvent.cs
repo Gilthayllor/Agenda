@@ -1,4 +1,6 @@
-﻿using Evently.Modules.Events.Domain.Events;
+﻿using Evently.Modules.Events.Application.Events;
+using MediatR;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
@@ -6,28 +8,21 @@ namespace Evently.Modules.Events.Presentation.Events;
 
 public static class CreateEvent
 {
-    public static void MapEndpoint(IEndpointRouteBuilder app)
+    internal static void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("events", async (Request request, EventsDbContext context) =>
-        {
-            var @event = new Event
+        app.MapPost("events", async (Request request, ISender sender) =>
             {
-                Id = Guid.NewGuid(),
-                Title = request.Title,
-                Description = request.Description,
-                Location = request.Location,
-                StartAtUtc = request.StartAtUtc,
-                EndsAtUtc = request.EndsAtUtc,
-                Status = EventStatus.Draft
-            };
+                Guid id = await sender.Send(new CreateEventCommand(
+                    request.Title,
+                    request.Description,
+                    request.Location,
+                    request.StartAtUtc,
+                    request.EndsAtUtc
+                ));
 
-            context.Events.Add(@event);
-            
-            await context.SaveChangesAsync();
-
-            return Results.Ok(@event.Id);
-        })
-        .WithTags(Tags.Events);
+                return Results.Ok(id);
+            })
+            .WithTags(Tags.Events);
     }
 
     internal sealed class Request

@@ -1,23 +1,33 @@
-﻿namespace Evently.Modules.Events.Application.Events;
+﻿using System.Data.Common;
+using Dapper;
+using Evently.Modules.Events.Application.Abstractions.Data;
+using Evently.Modules.Events.Domain.Events;
+using MediatR;
 
-public static class GetEvent
+namespace Evently.Modules.Events.Application.Events;
+
+public sealed record GetEventQuery(Guid EventId) : IRequest<EventResponse?>;
+
+internal sealed class GetEventQueryHandler(IDbConnectionFactory dbConnectionFactory) : IRequestHandler<GetEventQuery, EventResponse?>
 {
-    public static void MapEndpoint(IEndpointRouteBuilder app)
+    public async Task<EventResponse?> Handle(GetEventQuery request, CancellationToken cancellationToken)
     {
-        app.MapGet("events/{id:guid}", async (Guid id, EventsDbContext context) =>
-        {
-            EventResponse? @event = await context.Events.Where(e => e.Id == id)
-                .Select(e => new EventResponse(
-                    e.Id,
-                    e.Title,
-                    e.Description,
-                    e.Location,
-                    e.StartAtUtc,
-                    e.EndsAtUtc))
-                .SingleOrDefaultAsync();
+        await using DbConnection connection = await dbConnectionFactory.OpenConnectionAsync();
 
-            return @event is null ? Results.NotFound() : Results.Ok(@event);
-        })
-        .WithTags(Tags.Events);
+        const string sql =
+            $"""
+             SELECT
+                id as {nameof(EventResponse.Id)},
+                title as {nameof(EventResponse.Title)},
+                description as {nameof(EventResponse.Description)},
+                location as {nameof(EventResponse.Location)},
+                start_at_utc as {nameof(EventResponse.StartAtUtc)},
+                ends_at_utc as {nameof(EventResponse.EndsAtUtc)}
+             WHERE id = @EventId
+             """; // SQL query to get event by id
+        
+        EventResponse? @event = await connection.QueryFirstOrDefaultAsync<EventResponse>(sql, request);
+
+        return @event;
     }
 }
