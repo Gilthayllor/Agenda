@@ -1,5 +1,6 @@
 using Evently.Api.Extensions;
-using Evently.Modules.Events.Api;
+using Evently.Common.Application;
+using Evently.Common.Infrastructure;
 using Evently.Modules.Events.Infrastructure;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,9 @@ builder.Services.AddOpenApiDocument(configure =>
     configure.Version = "v1";
     configure.Description = "Evently API";
 });
+
+builder.Services.AddApplication([Evently.Modules.Events.Application.AssemblyReference.Assembly]);
+builder.Services.AddInfrastructure(builder.Configuration.GetConnectionString("Database")!);
 
 builder.Services.AddEventsModule(builder.Configuration);
 
