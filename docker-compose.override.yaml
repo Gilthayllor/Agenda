@@ -3,8 +3,12 @@
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=evently
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/home/app/.aspnet/https/Evently.pfx
     ports:
       - "5260:8080"
+      - "5261:8081"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro

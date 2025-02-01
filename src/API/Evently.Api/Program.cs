@@ -14,6 +14,8 @@ builder.Services.AddOpenApiDocument(configure =>
     configure.Description = "Evently API";
 });
 
+builder.Configuration.AddModuleConfiguration(["events"]);
+
 builder.Services.AddApplication([Evently.Modules.Events.Application.AssemblyReference.Assembly]);
 builder.Services.AddInfrastructure(builder.Configuration.GetConnectionString("Database")!);
 
@@ -37,3 +39,5 @@ if (app.Environment.IsDevelopment())
 EventsModule.MapEndpoints(app);
 
 app.Run();
+
+
