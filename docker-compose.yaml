@@ -30,4 +30,10 @@ services:
       - "8083:80"
     environment:
       ACCEPT_EULA: Y
+  
+  evently.redis:
+    image: redis:latest
+    container_name: Evently.Redis
+    ports:
+      - "6379:6379"
       
