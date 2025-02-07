@@ -2,6 +2,7 @@ using Evently.Api.Extensions;
 using Evently.Api.Midleware;
 using Evently.Common.Application;
 using Evently.Common.Infrastructure;
+using Evently.Common.Presentation.Endpoints;
 using Evently.Modules.Events.Infrastructure;
 using Serilog;
 
@@ -44,7 +45,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-EventsModule.MapEndpoints(app);
+app.MapEndpoints();
 
 app.UseSerilogRequestLogging();
 
