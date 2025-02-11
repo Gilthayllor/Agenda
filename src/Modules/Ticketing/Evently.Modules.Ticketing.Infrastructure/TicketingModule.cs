@@ -1,5 +1,6 @@
 using Evently.Common.Infrastructure.Outbox;
 using Evently.Common.Presentation.Endpoints;
+using Evently.Modules.Ticketing.Application.Carts;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,6 +22,7 @@ public static class TicketingModule
 
     private static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        
+        Console.WriteLine(configuration.ToString());
+        services.AddSingleton<CartService>();
     }
 }
