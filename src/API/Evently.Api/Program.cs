@@ -4,6 +4,7 @@ using Evently.Common.Application;
 using Evently.Common.Infrastructure;
 using Evently.Common.Presentation.Endpoints;
 using Evently.Modules.Events.Infrastructure;
+using Evently.Modules.Ticketing.Infrastructure;
 using Evently.Modules.Users.Infrastructure;
 using Serilog;
 
@@ -23,16 +24,18 @@ builder.Services.AddOpenApiDocument(configure =>
     configure.Description = "Evently API";
 });
 
-builder.Configuration.AddModuleConfiguration(["events", "users"]);
+builder.Configuration.AddModuleConfiguration(["events", "users", "ticketing"]);
 
 builder.Services.AddApplication([Evently.Modules.Events.Application.AssemblyReference.Assembly,
-Evently.Modules.Users.Application.AssemblyReference.Assembly]);
+Evently.Modules.Users.Application.AssemblyReference.Assembly,
+Evently.Modules.Ticketing.Application.AssemblyReference.Assembly]);
 
 builder.Services.AddInfrastructure(builder.Configuration.GetConnectionString("Database")!, 
     builder.Configuration.GetConnectionString("Cache")!);
 
 builder.Services.AddEventsModule(builder.Configuration);
 builder.Services.AddUsersModule(builder.Configuration);
+builder.Services.AddTicketingModule(builder.Configuration);
 
 WebApplication app = builder.Build();
 
