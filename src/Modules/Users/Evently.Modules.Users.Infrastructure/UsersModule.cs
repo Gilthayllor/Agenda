@@ -3,9 +3,8 @@ using Evently.Common.Presentation.Endpoints;
 using Evently.Modules.Users.Application.Abstractions.Data;
 using Evently.Modules.Users.Domain.Users;
 using Evently.Modules.Users.Infrastructure.Database;
-using Evently.Modules.Users.Infrastructure.PublicApi;
 using Evently.Modules.Users.Infrastructure.Users;
-using Evently.Modules.Users.PublicApi;
+using Evently.Modules.Users.Presentation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
@@ -21,7 +20,7 @@ public static class UsersModule
     {
         services.AddInfrastructure(configuration);
 
-        services.AddEndpoints(Presentation.AssemblyReference.Assembly);
+        services.AddEndpoints(AssemblyReference.Assembly);
 
         return services;
     }
@@ -40,7 +39,5 @@ public static class UsersModule
         services.AddScoped<IUserRepository, UserRepository>();
 
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<UsersDbContext>());
-
-        services.AddScoped<IUsersApi, UsersApi>();
     }
 }

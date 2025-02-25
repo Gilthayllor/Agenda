@@ -6,6 +6,7 @@ using Evently.Common.Presentation.Endpoints;
 using Evently.Modules.Events.Infrastructure;
 using Evently.Modules.Ticketing.Infrastructure;
 using Evently.Modules.Users.Infrastructure;
+using MassTransit;
 using Serilog;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -26,11 +27,15 @@ builder.Services.AddOpenApiDocument(configure =>
 
 builder.Configuration.AddModuleConfiguration(["events", "users", "ticketing"]);
 
-builder.Services.AddApplication([Evently.Modules.Events.Application.AssemblyReference.Assembly,
-Evently.Modules.Users.Application.AssemblyReference.Assembly,
-Evently.Modules.Ticketing.Application.AssemblyReference.Assembly]);
+builder.Services.AddApplication([
+    Evently.Modules.Events.Application.AssemblyReference.Assembly,
+    Evently.Modules.Users.Application.AssemblyReference.Assembly,
+    Evently.Modules.Ticketing.Application.AssemblyReference.Assembly
+]);
 
-builder.Services.AddInfrastructure(builder.Configuration.GetConnectionString("Database")!, 
+builder.Services.AddInfrastructure(
+    [TicketingModule.ConfigureConsumers],
+    builder.Configuration.GetConnectionString("Database")!,
     builder.Configuration.GetConnectionString("Cache")!);
 
 builder.Services.AddEventsModule(builder.Configuration);
@@ -59,5 +64,3 @@ app.UseSerilogRequestLogging();
 app.UseExceptionHandler();
 
 app.Run();
-
-

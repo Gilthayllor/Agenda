@@ -1,10 +1,12 @@
 ﻿using Evently.Common.Application.Caching;
 using Evently.Common.Application.Clock;
 using Evently.Common.Application.Data;
+using Evently.Common.Application.EventBus;
 using Evently.Common.Infrastructure.Caching;
 using Evently.Common.Infrastructure.Clock;
 using Evently.Common.Infrastructure.Data;
 using Evently.Common.Infrastructure.Outbox;
+using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Npgsql;
@@ -15,6 +17,7 @@ namespace Evently.Common.Infrastructure;
 public static class InfrastructureConfiguration
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services,
+        Action<IRegistrationConfigurator>[] moduleConfigureConsumers,
         string databaseConnectionString, string redisConnectionString)
     {
         NpgsqlDataSource npgsqlDataSource = new NpgsqlDataSourceBuilder(databaseConnectionString).Build();
@@ -25,8 +28,6 @@ public static class InfrastructureConfiguration
         services.TryAddSingleton<PublishDomainEventsInterceptor>();
 
         services.TryAddSingleton<IDateTimeProvider, DateTimeProvider>();
-        
-        services.TryAddSingleton<ICacheService, CacheService>();
 
         try
         {
@@ -43,6 +44,25 @@ public static class InfrastructureConfiguration
             services.AddDistributedMemoryCache();
         }
 
+        services.TryAddSingleton<ICacheService, CacheService>();
+        
+        services.TryAddSingleton<IEventBus, EventBus.EventBus>();
+
+        services.AddMassTransit(configure =>
+        {
+            foreach (Action<IRegistrationConfigurator> moduleConfigureConsumer in moduleConfigureConsumers)
+            {
+                moduleConfigureConsumer(configure);
+            }
+            
+            configure.SetKebabCaseEndpointNameFormatter();
+
+            configure.UsingInMemory((ctx, cfg) =>
+            {
+                cfg.ConfigureEndpoints(ctx);
+            });
+        });
+        
         return services;
     }
 }
